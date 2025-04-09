@@ -20,6 +20,8 @@ class Model_StartUp(QtWidgets.QMainWindow, start_ui.Ui_MainWindow):
     def detStart(self):
         from deterministic import DetClass
         self.det_page = DetClass()
+        self.det_page.backBtnSignal.connect(self.show)
+        self.det_page.destroySignal.connect(self.close)
         self.det_page.show()
         MainWindow.hide()
 

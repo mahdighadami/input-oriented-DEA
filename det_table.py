@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout, QWidget, QStyledItemDelegate, QLineEdit
 )
 from PyQt5.QtCore import Qt
-
+from PyQt5.QtCore import pyqtSignal
 
 class FloatDelegate(QStyledItemDelegate):
     def createEditor(self, parent, option, index):
@@ -20,6 +20,8 @@ class FloatDelegate(QStyledItemDelegate):
 
 
 class DetModel(QtWidgets.QMainWindow):
+    destroySignal = pyqtSignal()
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("DEA Input Page")
@@ -31,6 +33,20 @@ class DetModel(QtWidgets.QMainWindow):
         x = (screen.width() - self.width()) // 2
         y = (screen.height() - self.height()) // 2
         self.move(x, y)
+
+    def closeEvent(self, event):
+        if event.spontaneous():
+            dlg = QtWidgets.QMessageBox(self)
+            dlg.setWindowTitle("Exit?")
+            dlg.setText("Are you sure to Exit the program?")
+            dlg.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+            dlg.setIcon(QtWidgets.QMessageBox.Question)
+            button = dlg.exec()
+            if button == QtWidgets.QMessageBox.Yes:
+                event.accept()
+                self.destroySignal.emit()
+            else:
+                event.ignore()
 
     def set_data(self, data):
         self.n_dmu = data['n_dmu']

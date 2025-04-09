@@ -1,13 +1,18 @@
 import os, sys
 from PyQt5 import QtWidgets, QtGui
+from PyQt5.QtCore import pyqtSignal
 import deterministic_ui
 
 
 class DetClass(QtWidgets.QMainWindow, deterministic_ui.Ui_deterministic):
+    backBtnSignal = pyqtSignal()
+    destroySignal = pyqtSignal()
+
     def __init__(self):
         super(self.__class__, self).__init__()
         self.setupUi(self)
         self.nextButton.clicked.connect(self.next_page)
+        self.backButton.clicked.connect(self.back_page)
         self.center_on_screen()
 
     def center_on_screen(self):
@@ -16,8 +21,15 @@ class DetClass(QtWidgets.QMainWindow, deterministic_ui.Ui_deterministic):
         y = (screen.height() - self.height()) // 2
         self.move(x, y)
 
-    def next_page(self):
+    def closeEvent(self, event):
+        event.accept()
+        self.destroySignal.emit()
 
+    def back_page(self):
+        self.backBtnSignal.emit()
+        self.close()
+        
+    def next_page(self):
         if self.n_input.value() == 0 : 
             QtWidgets.QMessageBox.warning(self, "warning", "The number of inputs must be at least one.")
             return
@@ -44,10 +56,14 @@ class DetClass(QtWidgets.QMainWindow, deterministic_ui.Ui_deterministic):
         else:
             from det_table import DetModel
             self.solver_page = DetModel()
+            self.solver_page.destroySignal.connect(self.close_outer)
             self.solver_page.set_data(data)
             self.solver_page.show()
             self.hide()
-        
+
+    def close_outer(self):
+        self.destroySignal.emit()
+        self.close()
         
         
         
