@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_deterministic(object):
+class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(638, 680)
@@ -71,9 +71,6 @@ class Ui_deterministic(object):
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.ToolTipText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0, 128))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.PlaceholderText, brush)
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.WindowText, brush)
@@ -119,9 +116,6 @@ class Ui_deterministic(object):
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.ToolTipText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0, 128))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.PlaceholderText, brush)
         brush = QtGui.QBrush(QtGui.QColor(119, 119, 119))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.WindowText, brush)
@@ -167,9 +161,6 @@ class Ui_deterministic(object):
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.ToolTipText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0, 128))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.PlaceholderText, brush)
         self.frame.setPalette(palette)
         self.frame.setStyleSheet("QFrame {\n"
 "    background-color: #ff8080;\n"
@@ -298,6 +289,7 @@ class Ui_deterministic(object):
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.groupBox)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.weak_eff_check = QtWidgets.QRadioButton(self.groupBox)
+        self.weak_eff_check.setChecked(True)
         self.weak_eff_check.setObjectName("weak_eff_check")
         self.verticalLayout_4.addWidget(self.weak_eff_check)
         self.eff_check = QtWidgets.QRadioButton(self.groupBox)
@@ -335,12 +327,12 @@ class Ui_deterministic(object):
         self.nextButton.setStyleSheet("")
         self.nextButton.setObjectName("nextButton")
         self.verticalLayout.addWidget(self.nextButton, 0, QtCore.Qt.AlignHCenter)
-        self.pushButton = QtWidgets.QPushButton(self.frame)
+        self.backButton = QtWidgets.QPushButton(self.frame)
         font = QtGui.QFont()
         font.setPointSize(15)
-        self.pushButton.setFont(font)
-        self.pushButton.setObjectName("pushButton")
-        self.verticalLayout.addWidget(self.pushButton, 0, QtCore.Qt.AlignHCenter)
+        self.backButton.setFont(font)
+        self.backButton.setObjectName("backButton")
+        self.verticalLayout.addWidget(self.backButton, 0, QtCore.Qt.AlignHCenter)
         spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem2)
         spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -352,7 +344,7 @@ class Ui_deterministic(object):
         self.horizontalLayout.addItem(spacerItem5)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 638, 27))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 638, 26))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -376,4 +368,14 @@ class Ui_deterministic(object):
         self.excel_import.setText(_translate("MainWindow", "Excel"))
         self.manual_import.setText(_translate("MainWindow", "Manual Table"))
         self.nextButton.setText(_translate("MainWindow", "Next"))
-        self.pushButton.setText(_translate("MainWindow", "Back"))
+        self.backButton.setText(_translate("MainWindow", "Back"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
