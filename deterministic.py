@@ -22,8 +22,9 @@ class DetClass(QtWidgets.QMainWindow, deterministic_ui.Ui_deterministic):
         self.move(x, y)
 
     def closeEvent(self, event):
-        event.accept()
-        self.destroySignal.emit()
+        if event.spontaneous():
+            event.accept()
+            self.destroySignal.emit()
 
     def back_page(self):
         self.backBtnSignal.emit()
@@ -56,6 +57,7 @@ class DetClass(QtWidgets.QMainWindow, deterministic_ui.Ui_deterministic):
         else:
             from det_table import DetModel
             self.solver_page = DetModel()
+            self.solver_page.backBtnSignal.connect(self.show)
             self.solver_page.destroySignal.connect(self.close_outer)
             self.solver_page.set_data(data)
             self.solver_page.show()

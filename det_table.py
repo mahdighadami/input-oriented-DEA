@@ -20,6 +20,7 @@ class FloatDelegate(QStyledItemDelegate):
 
 
 class DetModel(QtWidgets.QMainWindow):
+    backBtnSignal = pyqtSignal()
     destroySignal = pyqtSignal()
 
     def __init__(self):
@@ -48,6 +49,31 @@ class DetModel(QtWidgets.QMainWindow):
             else:
                 event.ignore()
 
+    def back_page(self):
+        for row in range(self.table.rowCount()):
+            for col in range(1, self.table.columnCount()):
+                item = self.table.item(row, col)
+                if item and item.text().strip() != "":
+                    dlg = QtWidgets.QMessageBox(self)
+                    dlg.setWindowTitle("Unsaved Data")
+                    dlg.setText("You have entered data. Are you sure you want to go back? Unsaved data will be lost.")
+                    dlg.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+                    dlg.setIcon(QtWidgets.QMessageBox.Question)
+                    button = dlg.exec()
+                    if button == QtWidgets.QMessageBox.Yes:
+                        self.backBtnSignal.emit()
+                        self.close()
+                        return
+                    else:
+                        return
+                    
+        self.backBtnSignal.emit()
+        self.close()
+
+
+    def submit_page(self):
+        pass
+
     def set_data(self, data):
         self.n_dmu = data['n_dmu']
         self.n_input = data['n_input']
@@ -69,35 +95,29 @@ class DetModel(QtWidgets.QMainWindow):
         total_columns = len(col_labels)
 
         self.table = QTableWidget(self.n_dmu, total_columns)
-        self.table.setHorizontalHeaderLabels(col_labels)  # ✔️ Set headers first
+        self.table.setHorizontalHeaderLabels(col_labels)  
 
-        # 🎨 Then apply your style
+        # apply style
         self.table.setStyleSheet("""
             QTableWidget {
-                gridline-color: #ff66b3;  /* soft pink borders */
-                background-color: #cceeff;  /* light blue cells */
-                selection-background-color: #99e6ff;  /* slightly darker blue for selection */
+                gridline-color: #ff66b3;
+                background-color: #cceeff;
+                selection-background-color: #99e6ff;
             }
-
             QTableWidget::item:selected {
-                color: red;  /* change font color to red when selected */
+                color: red;
             }
-
             QHeaderView::section {
-                background-color: #99ffcc;  /* mint for headers */
+                background-color: #99ffcc;
                 padding: 4px;
                 border: 1px solid #ff66b3;
                 font-weight: bold;
             }
-
             QTableWidget::item {
                 border: 1px solid #ff66b3;
                 background-color: #cceeff;
             }
         """)
-
-
-
 
         # Apply the float-only delegate
         delegate = FloatDelegate()
@@ -114,6 +134,7 @@ class DetModel(QtWidgets.QMainWindow):
 
         # Create the submit button
         self.submit_button = QtWidgets.QPushButton("Submit")
+        self.submit_button.clicked.connect(self.submit_page)
         self.submit_button.setFixedSize(120, 40)
         self.submit_button.setStyleSheet("""
             QPushButton {
@@ -129,9 +150,29 @@ class DetModel(QtWidgets.QMainWindow):
             }
         """)
 
-        # Center the button
+        # Create the back button
+        self.back_button = QtWidgets.QPushButton("Back")
+        self.back_button.clicked.connect(self.back_page)
+        self.back_button.setFixedSize(120, 40)
+        self.back_button.setStyleSheet("""
+            QPushButton {
+                background-color: #ffe6e6;
+                color: #660000;
+                font-weight: bold;
+                border: 2px solid #ff9999;
+                border-radius: 10px;
+            }
+            QPushButton:hover {
+                background-color: #ffcccc;
+                border: 2px solid #ff6666;
+            }
+        """)
+
+        # Center both buttons in the layout
         button_layout = QtWidgets.QHBoxLayout()
         button_layout.addStretch()
+        button_layout.addWidget(self.back_button)
+        button_layout.addSpacing(20)  # space between buttons
         button_layout.addWidget(self.submit_button)
         button_layout.addStretch()
 
@@ -141,6 +182,6 @@ class DetModel(QtWidgets.QMainWindow):
         self.setCentralWidget(central_widget)
 
 
-    
+        
 
-    
+        
