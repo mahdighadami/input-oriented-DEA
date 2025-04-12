@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import pyqtSignal
+import numpy as np
 
 class FloatDelegate(QStyledItemDelegate):
     def createEditor(self, parent, option, index):
@@ -56,7 +57,7 @@ class DetModel(QtWidgets.QMainWindow):
                 if item and item.text().strip() != "":
                     dlg = QtWidgets.QMessageBox(self)
                     dlg.setWindowTitle("Unsaved Data")
-                    dlg.setText("You have entered data. Are you sure you want to go back? Unsaved data will be lost.")
+                    dlg.setText("You have entered data. Are you sure you want to go back? Unsaved data will be lost!")
                     dlg.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                     dlg.setIcon(QtWidgets.QMessageBox.Question)
                     button = dlg.exec()
@@ -70,9 +71,40 @@ class DetModel(QtWidgets.QMainWindow):
         self.backBtnSignal.emit()
         self.close()
 
-
     def submit_page(self):
-        pass
+        for row in range(self.table.rowCount()):
+            for col in range(self.table.columnCount()):
+                item = self.table.item(row, col)
+                if item and item.text().strip() == "":
+                    dlg = QtWidgets.QMessageBox(self)
+                    dlg.setWindowTitle("Incomplete Data")
+                    dlg.setText("Please fill in all fields before submitting.")
+                    dlg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+                    dlg.setIcon(QtWidgets.QMessageBox.Warning)
+                    dlg.exec()
+                    return
+                
+        # Collect data from the table
+        X = []
+        Y = []
+        for row in range(self.table.rowCount()):
+            inputs = []
+            outputs = []
+            for col in range(1, self.n_input + 1):
+                val = float(self.table.item(row, col).text())
+                inputs.append(val)
+            for col in range(self.n_input + 1, self.table.columnCount()):
+                val = float(self.table.item(row, col).text())
+                outputs.append(val)
+            X.append(inputs)
+            Y.append(outputs)
+
+        X = np.array(X)  # shape: (n_dmu, n_input)
+        Y = np.array(Y)  # shape: (n_dmu, n_output)
+        return X, Y
+
+
+
 
     def set_data(self, data):
         self.n_dmu = data['n_dmu']
