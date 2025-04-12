@@ -20,7 +20,7 @@ class FloatDelegate(QStyledItemDelegate):
         return editor
 
 
-class DetModel(QtWidgets.QMainWindow):
+class DetTable(QtWidgets.QMainWindow):
     backBtnSignal = pyqtSignal()
     destroySignal = pyqtSignal()
 

@@ -55,12 +55,12 @@ class DetClass(QtWidgets.QMainWindow, deterministic_ui.Ui_deterministic):
         if self.excel_import.isChecked():
             pass
         else:
-            from det_table import DetModel
-            self.solver_page = DetModel()
-            self.solver_page.backBtnSignal.connect(self.show)
-            self.solver_page.destroySignal.connect(self.close_outer)
-            self.solver_page.set_data(data)
-            self.solver_page.show()
+            from det_table import DetTable
+            self.det_table_page = DetTable()
+            self.det_table_page.backBtnSignal.connect(self.show)
+            self.det_table_page.destroySignal.connect(self.close_outer)
+            self.det_table_page.set_data(data)
+            self.det_table_page.show()
             self.hide()
 
     def close_outer(self):
