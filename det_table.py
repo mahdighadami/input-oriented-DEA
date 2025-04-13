@@ -45,7 +45,6 @@ class DetTable(QtWidgets.QMainWindow):
         self.n_input = data['n_input']
         self.n_output = data['n_output']
         self.model_type = data['model']
-
         self.init_table()
 
 
@@ -222,7 +221,7 @@ class DetTable(QtWidgets.QMainWindow):
         
 
         # Create the model instance
-        self.model = CCRModel(X, Y)
+        self.model = CCRModel.CCR_Model(X, Y)
         
         if self.model_type == 'weak-efficiency': 
             theta = [x.item() for x in self.model.basic_rank_dmus()]
@@ -243,6 +242,10 @@ class DetTable(QtWidgets.QMainWindow):
         self.output_page.setWindowTitle("Output")
         self.output_page.show()
         self.hide()
+
+    def close_outer(self):
+        self.destroySignal.emit()
+        self.close()
 
 
 
