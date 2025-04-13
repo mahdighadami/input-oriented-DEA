@@ -30,7 +30,7 @@ class DetTable(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("DEA Input Page")
-        self.resize(800, 600)
+        self.resize(1000, 700)
         self.center_on_screen()
         
     def center_on_screen(self):
@@ -83,7 +83,56 @@ class DetTable(QtWidgets.QMainWindow):
                 border: 1px solid #ff66b3;
                 background-color: #cceeff;
             }
+
+            /* Vertical scrollbar */
+            QScrollBar:vertical {
+                background: #e6faff;
+                width: 12px;
+                margin: 2px 0 2px 0;
+                border-radius: 6px;
+            }
+            QScrollBar::handle:vertical {
+                background: #66ccff;
+                min-height: 20px;
+                border-radius: 6px;
+            }
+            QScrollBar::handle:vertical:hover {
+                background: #33bbff;
+            }
+            QScrollBar::add-line:vertical,
+            QScrollBar::sub-line:vertical {
+                height: 0px;
+            }
+            QScrollBar::add-page:vertical,
+            QScrollBar::sub-page:vertical {
+                background: none;
+            }
+
+            /* Horizontal scrollbar */
+            QScrollBar:horizontal {
+                background: #e6faff;
+                height: 12px;
+                margin: 0 2px 0 2px;
+                border-radius: 6px;
+            }
+            QScrollBar::handle:horizontal {
+                background: #66ccff;
+                min-width: 20px;
+                border-radius: 6px;
+            }
+            QScrollBar::handle:horizontal:hover {
+                background: #33bbff;
+            }
+            QScrollBar::add-line:horizontal,
+            QScrollBar::sub-line:horizontal {
+                width: 0px;
+            }
+            QScrollBar::add-page:horizontal,
+            QScrollBar::sub-page:horizontal {
+                background: none;
+            }
         """)
+
 
         # Apply the float-only delegate
         delegate = FloatDelegate()

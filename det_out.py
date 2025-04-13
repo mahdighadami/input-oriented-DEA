@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget, QHBoxLayout, QTextEdit, QSizePolicy
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget, QHBoxLayout, QSizePolicy
 from PyQt5.QtCore import pyqtSignal
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -22,8 +22,17 @@ class DetOut(QtWidgets.QMainWindow):
 
     def closeEvent(self, event):
         if event.spontaneous():
-            self.destroySignal.emit()
-            event.accept()
+            dlg = QtWidgets.QMessageBox(self)
+            dlg.setWindowTitle("Exit?")
+            dlg.setText("Are you sure to Exit the program?")
+            dlg.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+            dlg.setIcon(QtWidgets.QMessageBox.Question)
+            button = dlg.exec()
+            if button == QtWidgets.QMessageBox.Yes:
+                event.accept()
+                self.destroySignal.emit()
+            else:
+                event.ignore()
 
     def back_page(self):
         self.backBtnSignal.emit()
@@ -39,7 +48,7 @@ class DetOut(QtWidgets.QMainWindow):
         dmu_row.addWidget(QLabel("DMUs:"))
         for name in dmu_names:
             label = QLabel(name)
-            label.setStyleSheet("font-weight: bold; padding: 6px;")
+            label.setStyleSheet("font-weight: bold; padding: 10px;")
             dmu_row.addWidget(label)
         layout.addLayout(dmu_row)
 
@@ -48,7 +57,7 @@ class DetOut(QtWidgets.QMainWindow):
         theta_row.addWidget(QLabel("Thetas:"))
         for val in thetas:
             label = QLabel(f"{val:.4f}")
-            label.setStyleSheet("color: blue; padding: 6px;")
+            label.setStyleSheet("color: blue; padding: 10px;")
             theta_row.addWidget(label)
         layout.addLayout(theta_row)
 
@@ -69,7 +78,7 @@ class DetOut(QtWidgets.QMainWindow):
         self.analysis_box.setReadOnly(True)
         self.analysis_box.setPlaceholderText("the results...")
         self.analysis_box.setFont(QtGui.QFont("Arial", 10))
-        self.analysis_box.setFixedHeight(300)  # Or increase to your liking
+        self.analysis_box.setFixedHeight(300) 
         self.analysis_box.setLineWrapMode(QtWidgets.QPlainTextEdit.WidgetWidth)
         self.analysis_box.setStyleSheet("""
             QPlainTextEdit {
