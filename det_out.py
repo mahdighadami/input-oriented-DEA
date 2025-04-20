@@ -62,16 +62,33 @@ class DetOut(QtWidgets.QMainWindow):
         layout.addLayout(theta_row)
 
         # Bar Plot of Thetas
-        fig, ax = plt.subplots()
-        ax.bar(dmu_names, thetas, color='skyblue')
-        ax.set_title("Efficiency Scores (Theta)")
-        ax.set_ylabel("Theta")
-        ax.set_xticks(range(len(dmu_names)))
-        ax.set_xticklabels(dmu_names, rotation=45)
+        # === First Plot: Efficiency Scores (Theta) ===
+        fig1, ax1 = plt.subplots(figsize=(7, 3))  # smaller figure
+        ax1.bar(dmu_names, thetas, color='skyblue', width=0.4)  # thinner bars
+        ax1.set_title("Efficiency Scores (Theta)", fontsize=12)
+        ax1.set_ylabel("Theta", fontsize=10)
+        ax1.set_xticks(range(len(dmu_names)))
+        ax1.set_xticklabels(dmu_names, rotation=45, ha='right', fontsize=8)
+        fig1.tight_layout()
 
-        canvas = FigureCanvas(fig)
-        canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        layout.addWidget(canvas)
+        canvas1 = FigureCanvas(fig1)
+        canvas1.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        layout.addWidget(canvas1)
+
+        # === Second Plot: Resource Waste (1 - Theta) ===
+        waste = [1 - theta for theta in thetas]
+        fig2, ax2 = plt.subplots(figsize=(7, 3))  # same compact size
+        ax2.bar(dmu_names, waste, color='salmon', width=0.4)
+        ax2.set_title("Resource Waste Chart (1 - Theta)", fontsize=12)
+        ax2.set_ylabel("Waste Level", fontsize=10)
+        ax2.set_xticks(range(len(dmu_names)))
+        ax2.set_xticklabels(dmu_names, rotation=45, ha='right', fontsize=8)
+        fig2.tight_layout()
+
+        canvas2 = FigureCanvas(fig2)
+        canvas2.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        layout.addWidget(canvas2)
+
 
         # Analysis Section
         self.analysis_box = QtWidgets.QPlainTextEdit()
