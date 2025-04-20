@@ -42,7 +42,7 @@ class DetOut(QtWidgets.QMainWindow):
     def set_data(self, thetas, dmu_names, model_type):
         central_widget = QWidget()
         layout = QVBoxLayout(central_widget)
-
+        dmu_names = [str(x) for x in dmu_names]
         # Labels for DMU names
         dmu_row = QHBoxLayout()
         dmu_row.addWidget(QLabel("DMUs:"))

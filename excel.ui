@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>585</width>
+    <height>387</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+    background-color: #fff2e6;  /* background */
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QFrame" name="frame">
+      <property name="styleSheet">
+       <string notr="true">QFrame {
+    background-color: #ff8080;
+    border: 2px solid #aaa;
+    border-radius: 10px;
+}
+QFrame#frame_2{
+    background-color: #fff2e6;
+    border: 2px solid #333;
+    border-radius: 10px;
+}
+
+QFrame QLabel {
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    padding: 3px;
+    background-color: #fff2e6;
+}
+
+QGroupBox {
+    border: 2px solid #555;
+    border-radius: 8px;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff2e6;
+}
+
+/* Optional: style the title of the group box */
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 0 5px;
+    color: #333;
+    font-weight: bold; 
+}
+
+/* Style RadioButtons inside the GroupBox */
+QGroupBox QRadioButton {
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    padding: 3px;
+    background-color: #fff2e6;
+}
+
+/* Style SpinBox inside the GroupBox */
+QSpinBox {
+    background-color: #fff2e6;
+}
+
+QPushButton {
+    background-color: #b5e7a0;
+    border: 2px solid #333;
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: #333;
+}
+
+/* Hover effect */
+QPushButton:hover {
+    background-color: #a2d891;  /* Slightly darker green */
+    border-color: #222;         /* Darker border on hover (optional) */
+}
+
+/* Pressed effect */
+QPushButton:pressed {
+    background-color: #8fcf82;  /* Deeper green */
+    border-color: #111;
+}
+</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QLabel" name="label">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Import your Excel file:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLineEdit" name="address_bar"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="Browse_btn">
+           <property name="text">
+            <string>Browse</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QPushButton" name="submitButton">
+         <property name="text">
+          <string>Submit</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>585</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
