@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget, QHBoxLayout, QSizePolicy
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget, QHBoxLayout, QSizePolicy, QScrollArea
+from PyQt5.QtCore import pyqtSignal, Qt
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
@@ -14,6 +14,31 @@ class DetOut(QtWidgets.QMainWindow):
         self.resize(1500, 950)
         self.center_on_screen()
 
+        # Set soft cream background for whole window
+        self.setStyleSheet("""
+            QMainWindow {
+                background-color: #fff5e6;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+            QLabel {
+                color: #4a4a4a;
+                font-size: 14px;
+            }
+            QLabel#headerLabel {
+                font-weight: 700;
+                font-size: 16px;
+                color: #8b5e61; /* muted pink */
+            }
+            QPlainTextEdit {
+                background-color: #fff0f2;
+                border: 1.5px solid #e6b8c4; /* muted pink */
+                border-radius: 10px;
+                padding: 10px;
+                font-size: 14px;
+                color: #5a3e3f;
+            }
+        """)
+
     def center_on_screen(self):
         screen = QtWidgets.QApplication.primaryScreen().availableGeometry()
         x = (screen.width() - self.width()) // 2
@@ -24,7 +49,7 @@ class DetOut(QtWidgets.QMainWindow):
         if event.spontaneous():
             dlg = QtWidgets.QMessageBox(self)
             dlg.setWindowTitle("Exit?")
-            dlg.setText("Are you sure to Exit the program?")
+            dlg.setText("Are you sure you want to exit the program?")
             dlg.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
             dlg.setIcon(QtWidgets.QMessageBox.Question)
             button = dlg.exec()
@@ -38,175 +63,211 @@ class DetOut(QtWidgets.QMainWindow):
         self.backBtnSignal.emit()
         self.close()
 
-
     def set_data(self, thetas, dmu_names, model_type):
-        central_widget = QWidget()
-        layout = QVBoxLayout(central_widget)
         dmu_names = [str(x) for x in dmu_names]
-        # Labels for DMU names
+
+        main_widget = QWidget()
+        main_layout = QVBoxLayout(main_widget)
+        main_layout.setContentsMargins(25, 25, 25, 25)
+        main_layout.setSpacing(20)
+
+        # DMU Row with header label
         dmu_row = QHBoxLayout()
-        dmu_row.addWidget(QLabel("DMUs:"))
+        dmu_row.setSpacing(15)
+        dmu_header = QLabel("DMUs:")
+        dmu_header.setObjectName("headerLabel")
+        dmu_row.addWidget(dmu_header)
         for name in dmu_names:
             label = QLabel(name)
-            label.setStyleSheet("font-weight: bold; padding: 10px;")
+            label.setStyleSheet("font-weight: 600; padding: 8px 12px; color: #7b5360;")  # muted pink-ish
+            label.setAlignment(Qt.AlignCenter)
+            label.setMinimumWidth(60)
+            label.setMaximumWidth(120)
+            label.setContentsMargins(5, 5, 5, 5)
+            label.setProperty('class', 'dmuLabel')
             dmu_row.addWidget(label)
-        layout.addLayout(dmu_row)
 
-        # Labels for Theta values
+        # Theta Row with header label
         theta_row = QHBoxLayout()
-        theta_row.addWidget(QLabel("Thetas:"))
+        theta_row.setSpacing(15)
+        theta_header = QLabel("Thetas:")
+        theta_header.setObjectName("headerLabel")
+        theta_row.addWidget(theta_header)
         for val in thetas:
             label = QLabel(f"{val:.4f}")
-            label.setStyleSheet("color: blue; padding: 10px;")
+            label.setStyleSheet("color: #3b5998; font-weight: 600; padding: 8px 12px;")  # subtle blue
+            label.setAlignment(Qt.AlignCenter)
+            label.setMinimumWidth(60)
+            label.setMaximumWidth(120)
             theta_row.addWidget(label)
-        layout.addLayout(theta_row)
 
-        # Bar Plot of Thetas
-        # === First Plot: Efficiency Scores (Theta) ===
-        fig1, ax1 = plt.subplots(figsize=(7, 3))  # smaller figure
-        ax1.bar(dmu_names, thetas, color='skyblue', width=0.4)  # thinner bars
-        ax1.set_title("Efficiency Scores (Theta)", fontsize=12)
-        ax1.set_ylabel("Theta", fontsize=10)
-        ax1.set_xticks(range(len(dmu_names)))
-        ax1.set_xticklabels(dmu_names, rotation=45, ha='right', fontsize=8)
-        fig1.tight_layout()
+        # Plots layout with spacing
+        plot_layout = QHBoxLayout()
+        plot_layout.setSpacing(30)
 
-        canvas1 = FigureCanvas(fig1)
-        canvas1.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
-        layout.addWidget(canvas1)
+        # Create efficiency plot
+        fig_eff, ax_eff = plt.subplots(figsize=(6, 4))
+        fig_eff.patch.set_facecolor('#fff5e6')  # match soft cream background
+        ax_eff.set_facecolor('#fff9f7')  # slightly lighter cream inside plot
+        ax_eff.bar(dmu_names, thetas, color='#8b5e61', width=0.5)  # muted pink bars
+        ax_eff.set_title("Efficiency (Theta)", fontsize=14, color='#7b5360')
+        ax_eff.set_ylabel("θ", fontsize=12)
+        ax_eff.tick_params(axis='x', rotation=45, labelsize=10, labelcolor='#7b5360')
+        ax_eff.tick_params(axis='y', labelsize=10, labelcolor='#7b5360')
+        fig_eff.tight_layout()
+        canvas_eff = FigureCanvas(fig_eff)
+        canvas_eff.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        canvas_eff.setStyleSheet("border-radius: 12px;")  # rounded corners
+        plot_layout.addWidget(canvas_eff)
 
-        # === Second Plot: Resource Waste (1 - Theta) ===
-        waste = [1 - theta for theta in thetas]
-        fig2, ax2 = plt.subplots(figsize=(7, 3))  # same compact size
-        ax2.bar(dmu_names, waste, color='salmon', width=0.4)
-        ax2.set_title("Resource Waste Chart (1 - Theta)", fontsize=12)
-        ax2.set_ylabel("Waste Level", fontsize=10)
-        ax2.set_xticks(range(len(dmu_names)))
-        ax2.set_xticklabels(dmu_names, rotation=45, ha='right', fontsize=8)
-        fig2.tight_layout()
+        # Waste plot
+        waste = [1 - t for t in thetas]
+        fig_waste, ax_waste = plt.subplots(figsize=(6, 4))
+        fig_waste.patch.set_facecolor('#fff5e6')
+        ax_waste.set_facecolor('#fff9f7')
+        ax_waste.bar(dmu_names, waste, color='#c97a7b', width=0.5)  # dusty rose color
+        ax_waste.set_title("Resource Waste (1 - θ)", fontsize=14, color='#7b5360')
+        ax_waste.set_ylabel("Waste", fontsize=12)
+        ax_waste.tick_params(axis='x', rotation=45, labelsize=10, labelcolor='#7b5360')
+        ax_waste.tick_params(axis='y', labelsize=10, labelcolor='#7b5360')
+        fig_waste.tight_layout()
+        canvas_waste = FigureCanvas(fig_waste)
+        canvas_waste.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        canvas_waste.setStyleSheet("border-radius: 12px;")
+        plot_layout.addWidget(canvas_waste)
 
-        canvas2 = FigureCanvas(fig2)
-        canvas2.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
-        layout.addWidget(canvas2)
+        # Scroll area for data + plots
+        scroll_content = QWidget()
+        scroll_inner_layout = QVBoxLayout(scroll_content)
+        scroll_inner_layout.setContentsMargins(15, 15, 15, 15)
+        scroll_inner_layout.setSpacing(15)
+        scroll_inner_layout.addLayout(dmu_row)
+        scroll_inner_layout.addLayout(theta_row)
+        scroll_inner_layout.addLayout(plot_layout)
 
-
-        # Analysis Section
-        self.analysis_box = QtWidgets.QPlainTextEdit()
-        self.analysis_box.setReadOnly(True)
-        self.analysis_box.setPlaceholderText("the results...")
-        self.analysis_box.setFont(QtGui.QFont("Arial", 10))
-        self.analysis_box.setFixedHeight(300) 
-        self.analysis_box.setLineWrapMode(QtWidgets.QPlainTextEdit.WidgetWidth)
-        self.analysis_box.setStyleSheet("""
-            QPlainTextEdit {
-                font-size: 16px;
-                padding: 10px;
-                border: 2px solid #cccccc;
-                border-radius: 10px;
-                background-color: #ffffff;
-                color: #2c3e50;
-            }
-            
-            QScrollBar:vertical {
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setWidget(scroll_content)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area.setFixedHeight(430)
+        scroll_area.setStyleSheet("""
+            QScrollArea {
                 border: none;
-                background: #f2f2f2;
-                width: 12px;
-                margin: 0px;
+                background-color: #fff5e6;
+            }
+            QScrollBar:horizontal {
+                height: 12px;
+                background: #f4dcdc;
+                margin: 0px 20px 0 20px;
                 border-radius: 6px;
             }
-
-            QScrollBar::handle:vertical {
-                background: #a0aab5;
-                min-height: 20px;
+            QScrollBar::handle:horizontal {
+                background: #c97a7b;
+                min-width: 30px;
                 border-radius: 6px;
             }
-
-            QScrollBar::handle:vertical:hover {
-                background: #8795a1;
-            }
-
-            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
-                height: 0px;
-            }
-
-            QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+            QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+                border: none;
                 background: none;
             }
         """)
 
-        self.analysis_box.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-        self.analysis_box.setMinimumHeight(200)
-        layout.addWidget(self.analysis_box)
+        main_layout.addWidget(scroll_area)
 
-        # Back Button
-        self.back_button = QtWidgets.QPushButton("Back")
-        self.back_button.clicked.connect(self.back_page)
-        layout.addWidget(self.back_button)
-        self.back_button.setFixedSize(120, 40)
-        self.back_button.setStyleSheet("""
-            QPushButton {
-                background-color: #ffe6e6;
-                color: #660000;
-                font-weight: bold;
-                border: 2px solid #ff9999;
+        # Analysis box styling added in __init__ stylesheet
+        self.analysis_box = QtWidgets.QPlainTextEdit()
+        self.analysis_box.setReadOnly(True)
+        self.analysis_box.setFont(QtGui.QFont("Segoe UI", 12))
+        self.analysis_box.setStyleSheet("border: none; background-color: transparent;")  # scroll-style will apply to container
+
+        analysis_scroll_area = QScrollArea()
+        analysis_scroll_area.setWidgetResizable(True)
+        analysis_scroll_area.setWidget(self.analysis_box)
+        analysis_scroll_area.setFixedHeight(300)
+        analysis_scroll_area.setStyleSheet("""
+            QScrollArea {
+                border: 1.5px solid #e6b8c4;
                 border-radius: 10px;
+                background-color: #fff0f2;
             }
-            QPushButton:hover {
-                background-color: #ffcccc;
-                border: 2px solid #ff6666;
+            QScrollBar:vertical {
+                width: 12px;
+                background: #f4dcdc;
+                margin: 10px 0px 10px 0px;
+                border-radius: 6px;
+            }
+            QScrollBar::handle:vertical {
+                background: #c97a7b;
+                min-height: 30px;
+                border-radius: 6px;
+            }
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+                border: none;
+                background: none;
             }
         """)
 
-        # Center the button
-        button_layout = QtWidgets.QHBoxLayout()
+        main_layout.addWidget(analysis_scroll_area)
+
+
+        # Back button styling
+        self.back_button = QtWidgets.QPushButton("Back")
+        self.back_button.clicked.connect(self.back_page)
+        self.back_button.setFixedSize(140, 45)
+        self.back_button.setStyleSheet("""
+            QPushButton {
+                background-color: #c97a7b;
+                color: white;
+                font-weight: 700;
+                font-size: 14px;
+                border: none;
+                border-radius: 15px;
+                padding: 10px 20px;
+                box-shadow: 0 4px 6px rgba(201, 122, 123, 0.5);
+                transition: all 0.3s ease;
+            }
+            QPushButton:hover {
+                background-color: #a55a5b;
+                box-shadow: 0 6px 10px rgba(165, 90, 91, 0.7);
+            }
+            QPushButton:pressed {
+                background-color: #7b3f40;
+                box-shadow: none;
+            }
+        """)
+        button_layout = QHBoxLayout()
         button_layout.addStretch()
         button_layout.addWidget(self.back_button)
         button_layout.addStretch()
-        layout.addLayout(button_layout)
+        main_layout.addLayout(button_layout)
 
-
-        # Set the central widget and layout
-        self.setCentralWidget(central_widget)
-        # Start analysis
+        self.setCentralWidget(main_widget)
         self.analyze_results(thetas, dmu_names, model_type)
-
-
-
     def analyze_results(self, thetas, dmu_names, model_type):
-        average_theta = sum(thetas) / len(thetas)
+        avg_theta = sum(thetas) / len(thetas)
         max_theta = max(thetas)
         min_theta = min(thetas)
-        best_indices = [i for i, val in enumerate(thetas) if val == max_theta]
-        worst_indices = [i for i, val in enumerate(thetas) if val == min_theta]
+        best = '، '.join([dmu_names[i] for i, v in enumerate(thetas) if v == max_theta])
+        worst = '، '.join([dmu_names[i] for i, v in enumerate(thetas) if v == min_theta])
 
-        best_dmus = ', '.join([dmu_names[i] for i in best_indices])
-        worst_dmus = ', '.join([dmu_names[i] for i in worst_indices])
+        text = f"""مدل: {model_type}
+میانگین θ: {avg_theta:.4f}
+بیشترین کارایی: {best} (θ = {max_theta:.4f})
+کمترین کارایی: {worst} (θ = {min_theta:.4f})
 
-        analysis = f"""Model Type: {model_type}
-        Average Efficiency (θ): {average_theta:.4f}
-
-        Most Efficient DMU(s): {best_dmus} (θ = {max_theta:.4f})
-        Least Efficient DMU(s): {worst_dmus} (θ = {min_theta:.4f})
-
-        Comparison:
-        """
-
-        # Compare each DMU to the others
+مقایسه واحدهای تصمیم‌گیری:
+"""
         for i, dmu in enumerate(dmu_names):
             if thetas[i] == max_theta:
-                comment = "is among the most efficient."
+                comment = "بالاترین کارایی"
             elif thetas[i] == min_theta:
-                comment = "is among the least efficient."
-            elif thetas[i] >= average_theta:
-                comment = "is above average in efficiency."
+                comment = "پایین‌ترین کارایی"
+            elif thetas[i] >= avg_theta:
+                comment = "بالاتر از میانگین"
             else:
-                comment = "is below average in efficiency."
-            
-            analysis += f"- {dmu} ({thetas[i]:.4f}) {comment}\n"
+                comment = "پایین‌تر از میانگین"
+            text += f"- {dmu} (θ = {thetas[i]:.4f}): {comment}\n"
 
-        analysis += "\nInterpretation:\n"
-        analysis += "- A theta (θ) closer to 1 means higher efficiency.\n"
-        analysis += "- Lower values indicate potential for improvement in input-output ratio.\n"
-
-        self.analysis_box.setPlainText(analysis)
-
+        self.analysis_box.setPlainText(text)
+        
