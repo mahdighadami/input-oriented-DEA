@@ -66,40 +66,71 @@ class DetOut(QtWidgets.QMainWindow):
     def set_data(self, thetas, dmu_names, model_type):
         dmu_names = [str(x) for x in dmu_names]
 
-        main_widget = QWidget()
-        main_layout = QVBoxLayout(main_widget)
+        main_widget = QtWidgets.QWidget()
+        main_layout = QtWidgets.QVBoxLayout(main_widget)
         main_layout.setContentsMargins(25, 25, 25, 25)
         main_layout.setSpacing(20)
 
-        # DMU Row with header label
-        dmu_row = QHBoxLayout()
-        dmu_row.setSpacing(15)
-        dmu_header = QLabel("DMUs:")
+        # DMU Row
+        dmu_row = QtWidgets.QHBoxLayout()
+        dmu_row.setSpacing(0)  # spacing handled by expanding wrappers
+
+        dmu_header = QtWidgets.QLabel("DMUs:")
         dmu_header.setObjectName("headerLabel")
         dmu_row.addWidget(dmu_header)
+
         for name in dmu_names:
-            label = QLabel(name)
-            label.setStyleSheet("font-weight: 600; padding: 8px 12px; color: #7b5360;")  # muted pink-ish
+            wrapper = QtWidgets.QWidget()
+            wrapper_layout = QtWidgets.QVBoxLayout(wrapper)
+            wrapper_layout.setContentsMargins(0, 0, 0, 0)
+            wrapper_layout.setSpacing(0)
+
+            label = QtWidgets.QLabel(name)
+            label.setStyleSheet("font-weight: 600; padding: 8px 12px; color: #7b5360;")
             label.setAlignment(Qt.AlignCenter)
             label.setMinimumWidth(60)
             label.setMaximumWidth(120)
             label.setContentsMargins(5, 5, 5, 5)
             label.setProperty('class', 'dmuLabel')
-            dmu_row.addWidget(label)
 
-        # Theta Row with header label
-        theta_row = QHBoxLayout()
-        theta_row.setSpacing(15)
-        theta_header = QLabel("Thetas:")
+            wrapper_layout.addWidget(label)
+            wrapper.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+            dmu_row.addWidget(wrapper)
+
+        # Theta Row
+        theta_row = QtWidgets.QHBoxLayout()
+        theta_row.setSpacing(0)
+
+        theta_header = QtWidgets.QLabel("Thetas:")
         theta_header.setObjectName("headerLabel")
         theta_row.addWidget(theta_header)
+
         for val in thetas:
-            label = QLabel(f"{val:.4f}")
-            label.setStyleSheet("color: #3b5998; font-weight: 600; padding: 8px 12px;")  # subtle blue
+            wrapper = QtWidgets.QWidget()
+            wrapper_layout = QtWidgets.QVBoxLayout(wrapper)
+            wrapper_layout.setContentsMargins(0, 0, 0, 0)
+            wrapper_layout.setSpacing(0)
+
+            label = QtWidgets.QLabel(f"{val:.4f}")
+            label.setStyleSheet("color: #3b5998; font-weight: 600; padding: 8px 12px;")
             label.setAlignment(Qt.AlignCenter)
             label.setMinimumWidth(60)
             label.setMaximumWidth(120)
-            theta_row.addWidget(label)
+            label.setContentsMargins(5, 5, 5, 5)
+            label.setProperty('class', 'thetaLabel')
+
+            wrapper_layout.addWidget(label)
+            wrapper.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+            theta_row.addWidget(wrapper)
+
+        # Plot layout placeholder
+        plot_layout = QtWidgets.QHBoxLayout()
+        plot_layout.setSpacing(30)
+
+        main_layout.addLayout(dmu_row)
+        main_layout.addLayout(theta_row)
+        main_layout.addLayout(plot_layout)
+
 
         # Plots layout with spacing
         plot_layout = QHBoxLayout()
