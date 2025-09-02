@@ -66,19 +66,17 @@ class DetOut(QtWidgets.QMainWindow):
     def set_data(self, thetas, dmu_names, model_type):
         dmu_names = [str(x) for x in dmu_names]
 
-        main_widget = QtWidgets.QWidget()
-        main_layout = QtWidgets.QVBoxLayout(main_widget)
+        main_widget = QWidget()
+        main_layout = QVBoxLayout(main_widget)
         main_layout.setContentsMargins(25, 25, 25, 25)
         main_layout.setSpacing(20)
 
         # DMU Row
-        dmu_row = QtWidgets.QHBoxLayout()
+        dmu_row = QHBoxLayout()
         dmu_row.setSpacing(0)  # spacing handled by expanding wrappers
-
-        dmu_header = QtWidgets.QLabel("DMUs:")
+        dmu_header = QLabel("DMUs:")
         dmu_header.setObjectName("headerLabel")
         dmu_row.addWidget(dmu_header)
-
         for name in dmu_names:
             wrapper = QtWidgets.QWidget()
             wrapper_layout = QtWidgets.QVBoxLayout(wrapper)
@@ -86,7 +84,7 @@ class DetOut(QtWidgets.QMainWindow):
             wrapper_layout.setSpacing(0)
 
             label = QtWidgets.QLabel(name)
-            label.setStyleSheet("font-weight: 600; padding: 8px 12px; color: #7b5360;")
+            label.setStyleSheet("font-weight: 600; padding: 8px 12px; color: #7b5360;")  # muted pink-ish
             label.setAlignment(Qt.AlignCenter)
             label.setMinimumWidth(60)
             label.setMaximumWidth(120)
@@ -104,7 +102,6 @@ class DetOut(QtWidgets.QMainWindow):
         theta_header = QtWidgets.QLabel("Thetas:")
         theta_header.setObjectName("headerLabel")
         theta_row.addWidget(theta_header)
-
         for val in thetas:
             wrapper = QtWidgets.QWidget()
             wrapper_layout = QtWidgets.QVBoxLayout(wrapper)
@@ -112,7 +109,7 @@ class DetOut(QtWidgets.QMainWindow):
             wrapper_layout.setSpacing(0)
 
             label = QtWidgets.QLabel(f"{val:.4f}")
-            label.setStyleSheet("color: #3b5998; font-weight: 600; padding: 8px 12px;")
+            label.setStyleSheet("color: #3b5998; font-weight: 600; padding: 8px 12px;")  # subtle blue
             label.setAlignment(Qt.AlignCenter)
             label.setMinimumWidth(60)
             label.setMaximumWidth(120)
@@ -130,8 +127,7 @@ class DetOut(QtWidgets.QMainWindow):
         main_layout.addLayout(dmu_row)
         main_layout.addLayout(theta_row)
         main_layout.addLayout(plot_layout)
-
-
+        
         # Plots layout with spacing
         plot_layout = QHBoxLayout()
         plot_layout.setSpacing(30)
