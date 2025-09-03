@@ -109,6 +109,13 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.label)
         spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem2)
+        self.manButton = QtWidgets.QPushButton(self.frame)
+        self.manButton.setMaximumSize(QtCore.QSize(500, 200))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.manButton.setFont(font)
+        self.manButton.setObjectName("manButton")
+        self.verticalLayout.addWidget(self.manButton, 0, QtCore.Qt.AlignHCenter)
         spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem3)
         spacerItem4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -134,7 +141,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addItem(spacerItem6)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 636, 27))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 636, 26))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -148,5 +155,16 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label.setText(_translate("MainWindow", "Input-Oriented Measure"))
+        self.manButton.setText(_translate("MainWindow", "Manual"))
         self.detButton.setText(_translate("MainWindow", "Deterministic"))
         self.stochButton.setText(_translate("MainWindow", "Stochastic"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())

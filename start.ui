@@ -153,6 +153,24 @@ QPushButton:pressed {
          </property>
         </spacer>
        </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QPushButton" name="manButton">
+         <property name="maximumSize">
+          <size>
+           <width>500</width>
+           <height>200</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Manual</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <spacer name="verticalSpacer_4">
          <property name="orientation">
@@ -252,7 +270,7 @@ QPushButton:pressed {
      <x>0</x>
      <y>0</y>
      <width>636</width>
-     <height>27</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
