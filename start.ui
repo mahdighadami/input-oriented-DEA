@@ -171,6 +171,18 @@ QPushButton:pressed {
          </property>
         </widget>
        </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QPushButton" name="contribButton">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Contributors</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <spacer name="verticalSpacer_4">
          <property name="orientation">

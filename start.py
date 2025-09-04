@@ -10,6 +10,8 @@ class Model_StartUp(QtWidgets.QMainWindow, start_ui.Ui_MainWindow):
         self.manButton.clicked.connect(self.manualStart)
         self.detButton.clicked.connect(self.detStart)
         self.stochButton.clicked.connect(self.stochStart)
+        self.contribButton.clicked.connect(self.contribStart)
+
         self.center_on_screen()
 
     def center_on_screen(self):
@@ -40,6 +42,11 @@ class Model_StartUp(QtWidgets.QMainWindow, start_ui.Ui_MainWindow):
 
     def stochStart(self):
         QtWidgets.QMessageBox.information(self, "information", "Comming Soon...")
+
+    def contribStart(self):
+        from contrib_page import ContribPage
+        self.contrib_page = ContribPage()
+        self.contrib_page.show()
         
 
         
