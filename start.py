@@ -1,5 +1,5 @@
-import sys
-from PyQt5 import QtWidgets
+import sys, os
+from PyQt5 import QtWidgets, QtGui
 import start_ui
 
 
@@ -14,6 +14,7 @@ class Model_StartUp(QtWidgets.QMainWindow, start_ui.Ui_MainWindow):
 
         self.center_on_screen()
 
+        
     def center_on_screen(self):
         screen = QtWidgets.QApplication.primaryScreen().availableGeometry()
         x = (screen.width() - self.width()) // 2
@@ -22,13 +23,14 @@ class Model_StartUp(QtWidgets.QMainWindow, start_ui.Ui_MainWindow):
 
     def manualStart(self):
         from manual_page import ManualPage
-        screenshots = ["manual/1.png",
-        "manual/2.png",
-        "manual/3.png",
-        "manual/4.png",
-        "manual/5.png",
-        "manual/6.png",
-        "manual/7.png"]
+        screenshots = [resource_path("manual/1.png"),
+        resource_path("manual/2.png"),
+        resource_path("manual/3.png"),
+        resource_path("manual/4.png"),
+        resource_path("manual/5.png"),
+        resource_path("manual/6.png"),
+        resource_path("manual/7.png")]
+
         self.man_page = ManualPage(screenshots)
         self.man_page.show()
 
@@ -49,9 +51,19 @@ class Model_StartUp(QtWidgets.QMainWindow, start_ui.Ui_MainWindow):
         self.contrib_page.show()
         
 
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
         
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
+    app.setWindowIcon(QtGui.QIcon(resource_path("Sbu-logo.ico")))
     MainWindow = Model_StartUp()
     MainWindow.show()
     sys.exit(app.exec_())
