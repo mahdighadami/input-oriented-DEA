@@ -29,24 +29,47 @@ class ExClass(QtWidgets.QMainWindow, excel_ui.Ui_Excel):
         self.model_type = data['model']
     
     def browse_add(self):
-        self.file_location, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
+        self.file_location, _ = QtWidgets.QFileDialog.getOpenFileName(
+        self, "Open Data File","",
+        "Spreadsheet Files (*.xlsx *.xls *.xlsb *.ods *.csv *.tsv);;All Files (*)"
+    )
         self.address_bar.setText(self.file_location)
 
-    def next_page(self):
-        from read_excel import read_excel
-        reader = read_excel(self.file_location, self.n_input, self.n_output)
-        dmu_names = reader.read_file()
-        X, Y = reader.process()
 
+
+
+    def next_page(self):
+        if self.address_bar.text() == "":
+            QtWidgets.QMessageBox.warning(self, "warning", "Select a file please.")
+            return
+
+        from read_excel import read_excel
+        try:
+            reader = read_excel(self.file_location, self.n_input, self.n_output)
+            dmu_names = reader.read_file()
+        except:
+            QtWidgets.QMessageBox.warning(self, "warning", "Invalid Excel File!")
+            return
+
+        if dmu_names[0] == "Error":
+            QtWidgets.QMessageBox.warning(self, "warning", dmu_names[1])
+            return
+        X, Y = reader.process()
+        
         # Create the model instance
         self.model = CCRModel.CCR_Model(X, Y)
-        
-        if self.model_type == 'weak-efficiency': 
-            theta = [x.item() for x in self.model.basic_rank_dmus()]
-        elif self.model_type == 'efficiency':
-            theta = [x.item() for x in self.model.slack_rank_dmus()]
-        else:
-            theta = [x.item() for x in self.model.super_rank_dmus()]
+        theta = 0
+
+        try:    
+            if self.model_type == 'weak-efficiency': 
+                theta = [x.item() for x in self.model.basic_rank_dmus()]
+            elif self.model_type == 'efficiency':
+                theta = [x.item() for x in self.model.slack_rank_dmus()]
+            else:
+                theta = [x.item() for x in self.model.super_rank_dmus()]
+        except:
+            QtWidgets.QMessageBox.warning(self, "warning", "Invalid Excel File! There may be a dimension mismatch between the app inputs and the Excel file, or another issue with the file.")
+            return
 
         # Create the output page
         self.output_page = det_out.DetOut()

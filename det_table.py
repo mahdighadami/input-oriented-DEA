@@ -17,7 +17,7 @@ class FloatDelegate(QStyledItemDelegate):
             return super().createEditor(parent, option, index)
 
         editor = QLineEdit(parent)
-        validator = QtGui.QDoubleValidator(bottom=-1e100, top=1e100, decimals=10)
+        validator = QtGui.QDoubleValidator(bottom=0, top=1e100, decimals=10)
         validator.setNotation(QtGui.QDoubleValidator.StandardNotation)
         editor.setValidator(validator)
         return editor
