@@ -12,7 +12,6 @@ A user-friendly GUI application built with **PyQt5** to compute, visualize, and 
   - **Efficiency Scores (θ)**
   - **Resource Waste (1 − θ)** ➖
 - 🧠 Automated textual analysis of efficiency results
-- 🔄 Navigation system with signal-based back buttons
 - 💡 Interpretation section for better understanding of DEA outputs
 
 
@@ -42,23 +41,13 @@ pip install -r requirements.txt
 * Python 3.7+
 * PyQt5
 * matplotlib
+* numpy
 * Install manually with:
 
 ```bash
-pip install pyqt5 matplotlib
+pip install pyqt5 matplotlib numpy
 ```
 
-## 🧩 Project Structure
-```bash
-dea-efficiency-analyzer/
-├── deterministic.py      # DEA computation logic
-├── det_table.py          # GUI input form
-├── det_out.py            # Output visualizer with plots and analysis
-├── main.py               # Application entry point
-├── assets/               # Icons, stylesheets, etc.
-├── screenshots/          # Sample plot images
-└── README.md
-```
 
 ## 📊 Model Summary
 DEA Type: Input-oriented, deterministic
